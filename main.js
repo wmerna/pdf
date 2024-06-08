@@ -28,14 +28,14 @@ function test2() {
     deleteButton.setAction("MouseUp", "deleteLastSection();");
 
     global.doc.addScript("duplicateSection", function duplicateSection() {
-        console.println(global.currentPage)
+        console.println(global.currentPage + " Current Page")
         var currentY = global.firstSection.b - (global.counter * global.spacing);
         var newSectionBottom = currentY - 20;
-        console.println(newSectionBottom)
+        console.println(newSectionBottom + " Section 1. duplicate: Bottom")
         if (newSectionBottom < 0) {
             global.currentPage += 1;
             global.counter = 1;
-            currentY = global.pageHeight - 40;
+            currentY = global.firstSection.b - global.spacing;
         }
         var newTitlePos = [global.firstSection.a, currentY, global.firstSection.c, currentY + 20];
         var newEntryPos = [global.firstSection.a, currentY - 20, global.firstSection.c, currentY];
@@ -65,18 +65,20 @@ function test2() {
     global.doc.addScript("adjustSecondSection", function adjustSecondSection(currentPage) {
         var newSecondTitlePos = [global.secondSection.a, global.secondSection.b - (global.counter * global.spacing), global.secondSection.c, global.secondSection.d - (global.counter * global.spacing)];
         var newSecondEntryPos = [global.secondSection.a, global.secondSection.b - 20 - (global.counter * global.spacing), global.secondSection.c, global.secondSection.d - 20 - (global.counter * global.spacing)];
-        console.println(newSecondEntryPos[1]);
+        console.println(newSecondEntryPos[1] + "New secondEntry position when adjusting");
         if (newSecondEntryPos[1] < 0) {
             global.currentPage += 1;
-            global.secondSection = { a: 100, b: 600, c: 200, d: 620 }
-            newSecondTitlePos = [global.secondSection.a, global.pageHeight - 40, global.secondSection.c, global.pageHeight - 20];
-            newSecondEntryPos = [global.secondSection.a, global.pageHeight - 60, global.secondSection.c, global.pageHeight - 40];
+            global.secondSection = { a: 100, b: 600, c: 200, d: 620 };
+            newSecondTitlePos = [global.secondSection.a, global.secondSection.b, global.secondSection.c, global.secondSection.d];
+            newSecondEntryPos = [global.secondSection.a, global.secondSection.b - 20, global.secondSection.c, global.secondSection.d - 20];
+            console.println(newSecondTitlePos + " New second position when position < 0")
         }
-        
+
         var secondTitleField = global.doc.getField("SecondSectionTitle");
         if (secondTitleField != null) {
             secondTitleField.rect = newSecondTitlePos;
             secondTitleField.page = global.currentPage;
+            console.println(global.currentPage + " Global Current Page when adjusting second section")
         }
         var secondEntryField = global.doc.getField("SecondEntryField");
         if (secondEntryField != null) {
@@ -89,3 +91,4 @@ function test2() {
 }
 
 test2();
+
