@@ -1,13 +1,25 @@
 function form() {
-  function getCoordinates(pageNumber, x, y, width, height) {
+  global.everything = [];
+
+  global.workingPage = 0;
+  global.workingPageY = 0;
+  global.fields = 0;
+
+  global.fieldSize = 5;
+  global.btnSize = 5;
+
+  global.allStart = 5;
+  global.allSpace = 5;
+  global.allWidth = 90;
+
+  function getCoordinates(x, y, width, height) {
     //vNormalize values to a range of 0 to 1
     var xNorm = x / 100;
     var yNorm = y / 100;
     var widthNorm = width / 100;
     var heightNorm = height / 100;
 
-    // Assuming this.getPageBox( {nPage: p} ) returns an array with coordinates
-    var pageBox = this.getPageBox({ nPage: pageNumber });
+    var pageBox = this.getPageBox({ nPage: global.workingPage });
 
     // Calculate coordinates based on normalized values and page box
     var upperLeftX = pageBox[0] + xNorm * (pageBox[2] - pageBox[0]);
@@ -19,12 +31,12 @@ function form() {
     return [upperLeftX, upperLeftY, lowerRightX, lowerRightY];
   }
 
-  function addButton(caption, action, pageNumber, x, y, width, height) {
+  function addButton(caption, action, x, y, width, height) {
     var button = this.addField(
       caption,
       "button",
-      pageNumber,
-      getCoordinates(pageNumber, x, y, width, height)
+      global.workingPage,
+      getCoordinates(x, y + global.workingPageY, width, height)
     );
 
     button.borderStyle = border.s;
@@ -37,15 +49,19 @@ function form() {
     button.setAction("MouseUp", action);
   }
 
-  global.everything = [];
+  function addField(x, y, width, height) {
+    console.println("Fields: " + global.fields);
 
-  global.workingPage = -1;
-  global.fields = 1;
+    var field = this.addField(
+      "TextField" + global.fields,
+      "text",
+      global.workingPage,
+      getCoordinates(x, y + global.workingPageY, width, height)
+    );
 
-  global.fieldSize = 5;
-  global.fieldMargin = 5;
+    field.borderStyle = border.s;
+  }
 
-  // if one array's total is 100, then create a new array
   function addVertical(num) {
     const last = global.everything[global.everything.length - 1];
 
@@ -54,13 +70,15 @@ function form() {
 
       if (total + num <= 100) {
         last.push(num);
+        global.workingPageY += num;
       } else {
         global.everything.push([num]);
         global.workingPage++;
+        global.workingPageY = num;
       }
     } else {
       global.everything.push([num]);
-      global.workingPage++;
+      global.workingPageY = num;
     }
   }
 
@@ -70,68 +88,74 @@ function form() {
     if (last.length === 1) {
       global.everything.pop();
       global.workingPage--;
+      global.workingPageY = 0;
     } else {
       last.pop();
+      const sum = last.reduce((acc, curr) => acc + curr, 0);
+      global.workingPageY = sum;
     }
   }
 
   global.addVertical = addVertical;
   global.removeVertical = removeVertical;
+  global.addField = addField;
+  global.addButton = addButton;
   global.getCoordinates = getCoordinates;
+
+  addButton(
+    "Add Section",
+    "AddSection();",
+    global.allStart,
+    global.btnSize,
+    global.allWidth,
+    global.btnSize
+  );
 
   addVertical(5);
 
-  addButton("Add Section", "AddSection();", global.workingPage, 5, 5, 90, 5);
-
-  addVertical(15);
+  addVertical(5);
 
   addButton(
     "Delete Section",
     "DeleteSection();",
-    global.workingPage,
-    5,
-    15,
-    90,
-    5
+    global.allStart,
+    global.btnSize,
+    global.allWidth,
+    global.btnSize
   );
+
+  addVertical(global.btnSize);
 
   // a script to automatically add a new text field when the button is clicked
   // if the number of fields if more
   this.addScript("AddSection", function AddSection() {
-    global.fields++;
-    global.addVertical(global.fieldSize + global.fieldMargin);
-
     console.println("Fields: " + global.fields);
-    console.println("Page: " + global.workingPage);
     console.println("Everything: " + JSON.stringify(global.everything));
+    console.println("PageY: " + global.workingPageY);
+    console.println("Page: " + global.workingPage);
 
-    const field = this.addField(
-      "Text Field" + global.fields,
-      "text",
-      global.workingPage,
-      global.getCoordinates(
-        global.workingPage,
-        global.fieldMargin,
-        global.fieldMargin +
-          global.fields * (global.fieldSize + global.fieldMargin),
-        100 - 2 * global.fieldMargin,
-        global.fieldSize
-      )
+    global.addField(
+      global.allStart,
+      global.fieldSize,
+      global.allWidth,
+      global.fieldSize
     );
-
-    field.text = "Section " + global.fields;
+    global.addVertical(global.fieldSize);
+    global.fields++;
   });
 
   this.addScript("DeleteSection", function DeleteSection() {
     if (global.fields > 1) {
-      const field = this.getField("Text Field" + global.fields);
+      var field = this.getField("TextField" + global.fields);
 
       if (field) {
         this.removeField(field.name);
       }
 
-      global.fields--;
       global.removeVertical();
+      global.fields--;
+    } else {
+      console.println("Cannot delete the last field");
     }
   });
 
