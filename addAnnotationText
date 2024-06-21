@@ -1,0 +1,18 @@
+var f = this.addAnnot({
+    type: "FreeText",
+    page: 0, 
+    rect: [50,602,562,572],
+    contents: "This is a free text annotation.",
+    fillColor:["RGB", .098, .161, .318],
+    width: 0,
+  });
+  
+     var span = new Object();
+      span.text = "1. Information pertaining to the trust (for a) and b) please tick the applicable boxes):";
+      span.textSize = 9;
+      span.textColor = color.white;
+      span.alignment = "left";
+      span.fontFamily = ["Gotham", "monospace" ],
+      
+      // Apply the span to the FreeText annotation
+      f.richContents = [span];
