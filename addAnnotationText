@@ -1,3 +1,20 @@
+// Color palette
+
+// strokeColor: ["RGB", .098, .161, .318],  // Dark Blue
+// strokeColor: [ "RGB", .282,.706,.706 ], // Fountain Blue
+
+// HEREEEEEEEEEEEEEEE
+
+function spanBlack(stringText, stringFont, integerSize) {
+  return {
+    text: stringText,
+    textSize: integerSize,
+    textColor: color.black,
+    alignment: "left",
+    fontFamily: [stringFont, "monospace"]
+  };
+}
+
 function addTitles(stringText,stringFont,integerSize, position, page) {
 
   function spanWhite(stringText,stringFont,integerSize) {
@@ -40,16 +57,6 @@ function addTitles(stringText,stringFont,integerSize, position, page) {
 
 function addLineAndField(stringText, stringFont, integerSize, position, page) {
 
-  function spanBlack(stringText, stringFont, integerSize) {
-    return {
-      text: stringText,
-      textSize: integerSize,
-      textColor: color.black,
-      alignment: "left",
-      fontFamily: [stringFont, "monospace"]
-    };
-  }
-
   this.addAnnot({
     type: "FreeText",
     page: page,
@@ -69,16 +76,6 @@ function addLineAndField(stringText, stringFont, integerSize, position, page) {
 }
 
 function doubleAddLineAndField(stringText, stringText2, stringFont, integerSize, position, page) {
-  function spanBlack(stringText, stringFont, integerSize) {
-    var span = {};
-    span.text = stringText;
-    span.textSize = integerSize;
-    span.textColor = color.black;
-    span.alignment = "left";
-    span.fontFamily = [stringFont, "monospace"];
-    return span;
-  }
-
   this.addAnnot({
     type: "FreeText",
     page: page,
@@ -107,17 +104,6 @@ function doubleAddLineAndField(stringText, stringText2, stringFont, integerSize,
 }
 
 function addTextLine(stringText, stringFont, integerSize, position, page) {
-
-  function spanBlack(stringText, stringFont, integerSize) {
-    return {
-      text: stringText,
-      textSize: integerSize,
-      textColor: color.black,
-      alignment: "left",
-      fontFamily: [stringFont, "monospace"]
-    };
-  }
-
   this.addAnnot({
     type: "FreeText",
     page: page,
@@ -128,9 +114,43 @@ function addTextLine(stringText, stringFont, integerSize, position, page) {
   });
 }
 
+function checkboxesLine(page){
 
-function addText(){
-  
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [220, 422, 233, 409],
+    fillColor: color.transparent,
+    width: 0.1,
+  });
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [235, 420, 265, 411],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack("YES", "Gotham", 9)]
+  })
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [280, 422, 293, 409],
+    fillColor: color.transparent,
+    width: 0.1,
+  });
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [295, 420, 335, 411],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack("NO", "Gotham", 9)]
+  })
+}
+
+function addMyTexts(){
+
 addLineAndField(
   "First name(s), last name(s)/entity",
   "Gotham",
@@ -188,5 +208,13 @@ addTextLine(
   0
 );
 
+checkboxesLine(0);
 }
 
+addMyTexts()
+
+
+
+
+// check + text + check + text
+// Adjust CheckBox Creation
