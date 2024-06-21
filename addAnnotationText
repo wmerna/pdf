@@ -1,42 +1,192 @@
-var f = this.addAnnot({
-    type: "FreeText",
-    page: 0, 
-    rect: [50,602,562,572],
-    contents: "This is a free text annotation.",
-    fillColor:["RGB", .098, .161, .318],
-    width: 0,
-  });
-  
-     var span = new Object();
-      span.text = "1. Information pertaining to the trust (for a) and b) please tick the applicable boxes):";
-      span.textSize = 9;
-      span.textColor = color.white;
-      span.alignment = "left";
-      span.fontFamily = ["Gotham", "monospace" ],
-      
-      // Apply the span to the FreeText annotation
-      f.richContents = [span];
+function addTitles(stringText,stringFont,integerSize, position, page) {
 
-//// Upper old version, eblow new version 
-
-
-
-
-function spanWhite(stringText,stringFont,integerSize) {
+  function spanWhite(stringText,stringFont,integerSize) {
     var span = new Object();
       span.text = stringText;
       span.textSize = integerSize;
-      span.textColor = color.convert("RGB", .098, .161, .318);
+      span.textColor = color.white;
       span.alignment = "left";
       span.fontFamily = [stringFont, "monospace" ];
       return span;
-    }
+  }
 
-var f = this.addAnnot({
+  function PositionMiddle(integerSize, position){
+    var distance = position.b - position.d - integerSize;
+    var distance2 = distance / 2
+    position.b -= distance2
+    position.d += distance2
+    return [position.a, position.b, position.c,position.d]
+  }
+
+  var f = this.addAnnot({
+    type: "FreeText",
+    page: page, 
+    rect: [position.a,position.b,position.c,position.d],
+    fillColor: ["RGB", .098, .161, .318],
+    width: 0,
+  });
+
+  var text = this.addAnnot({
     type: "FreeText",
     page: 0, 
-    rect: [50,602,562,572],
-    fillColor: [ "RGB", 0.282,0.706,0.706 ],
+    rect: PositionMiddle(integerSize, position),
+    fillColor: color.transparent,
     width: 0,
-    richContents: [spanGothamDarkBlue("1. Information pertaining to the trust (for a) and b) please tick the applicable boxes):","Gotham",9)]
+    richContents: [spanWhite(stringText,stringFont,integerSize)]
   });
+
+  return position
+}
+
+function addLineAndField(stringText, stringFont, integerSize, position, page) {
+
+  function spanBlack(stringText, stringFont, integerSize) {
+    return {
+      text: stringText,
+      textSize: integerSize,
+      textColor: color.black,
+      alignment: "left",
+      fontFamily: [stringFont, "monospace"]
+    };
+  }
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b, position.a + 150, position.d],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a + 170, position.b, position.c, position.d],
+    fillColor: color.transparent,
+    width: 1
+  });
+}
+
+function doubleAddLineAndField(stringText, stringText2, stringFont, integerSize, position, page) {
+  function spanBlack(stringText, stringFont, integerSize) {
+    var span = {};
+    span.text = stringText;
+    span.textSize = integerSize;
+    span.textColor = color.black;
+    span.alignment = "left";
+    span.fontFamily = [stringFont, "monospace"];
+    return span;
+  }
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b, position.a + 150, position.d + 10],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b - 10, position.a + 150, position.d],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText2, stringFont, integerSize)]
+  });
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a + 170, position.b, position.c, position.d],
+    fillColor: color.transparent,
+    width: 1
+  });
+}
+
+function addTextLine(stringText, stringFont, integerSize, position, page) {
+
+  function spanBlack(stringText, stringFont, integerSize) {
+    return {
+      text: stringText,
+      textSize: integerSize,
+      textColor: color.black,
+      alignment: "left",
+      fontFamily: [stringFont, "monospace"]
+    };
+  }
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b, position.c, position.d],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+}
+
+
+function addText(){
+  
+addLineAndField(
+  "First name(s), last name(s)/entity",
+  "Gotham",
+  9,
+  {a: 50, b: 562, c: 562, d: 552},
+  0
+);
+
+addTitles(
+  "1. Information pertaining to the trust (for a) and b) please tick the applicable boxes):",
+  "Gotham",
+  9,
+  { a: 50, b: 602, c: 562, d: 572 },
+  0
+)
+
+doubleAddLineAndField(
+  "Actual address of domicile/",
+  "registered office (incl. Country)*",
+  "Gotham",
+  9,
+  {a: 50, b: 547, c: 562, d: 527},
+  0
+);
+
+addLineAndField(
+  "Date of birth (DD/MM/YYYY)",
+  "Gotham",
+  9,
+  {a: 50, b: 512, c: 562, d: 502},
+  0
+);
+
+addLineAndField(
+  "Nationality",
+  "Gotham",
+  9,
+  {a: 50, b: 487, c: 562, d: 477},
+  0
+);
+
+addLineAndField(
+  "Date of death (if) (DD/MM/YYYY)",
+  "Gotham",
+  9,
+  {a: 50, b: 462, c: 562, d: 452},
+  0
+);
+
+addTextLine(
+  "In case of a revocable trust: does the settlor have the right to revoke the trust?",
+  "Gotham",
+  9,
+  {a: 50, b: 437, c: 562, d: 427},
+  0
+);
+
+}
+
