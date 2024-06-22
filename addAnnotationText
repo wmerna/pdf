@@ -221,6 +221,59 @@ function addDoubleTextLine(stringText,stringText2, stringFont, integerSize, posi
   });
 }
 
+function addTextAndDoubleCheckbox(stringText,fieldName,stringText2,fieldName2,stringText3, stringFont, integerSize, position, page){
+  
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b-5, position.c, position.d+5],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+
+  // create field
+  field = this.addField(fieldName,"checkbox",page,[position.a+170,position.b,position.a+189,position.d]);
+  field.value = "Off";
+  field.borderStyle = border.s;
+  field.borderColor = color.black;
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a+191, position.b-5, position.a+368, position.d+5],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText2, stringFont, integerSize)]
+  });
+
+  field2 = this.addField(fieldName2,"checkbox",page,[position.a+370,position.b,position.a+389,position.d]);
+  field2.value = "Off";
+  field2.borderStyle = border.s;
+  field2.borderColor = color.black;
+
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a+391, position.b-5, position.a+512, position.d+5],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText3, stringFont, integerSize)]
+  });
+
+}
+
+function addField2(title,page,position){
+  var titleField = this.addField(
+    title, 
+    "text", 
+    page, 
+    [position.a,position.b,position.c,position.d]
+  );
+  titleField.value = "";
+}
+
 function addMyTexts(){
 
 addLineAndField(
@@ -301,6 +354,25 @@ addTripleTextLine(
   0
 );
 
+addTextAndDoubleCheckbox(
+  "a) Type of trust:",
+  "check1",
+  "Discretionary Trust or",
+  "check2",
+  "Non-discretionary Trust",
+  "Gotham",
+  9,
+  {a: 50, b: 344, c: 562, d: 325},
+  0
+)
+
+addField(
+  "testField",
+  {a: 50, b: 320, c: 562, d: 310},
+  0
+)
+
+
 }
 
 addMyTexts()
@@ -308,6 +380,4 @@ addMyTexts()
 
 
 // function singlefield
-// function textcheckboxes
-
 
