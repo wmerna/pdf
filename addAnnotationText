@@ -1,9 +1,7 @@
 // Color palette
-
 // strokeColor: ["RGB", .098, .161, .318],  // Dark Blue
 // strokeColor: [ "RGB", .282,.706,.706 ], // Fountain Blue
-
-// HEREEEEEEEEEEEEEEE
+// Boxes and titles start at 50, Texts start at 51
 
 function spanBlack(stringText, stringFont, integerSize) {
   return {
@@ -32,7 +30,7 @@ function addTitles(stringText,stringFont,integerSize, position, page) {
     var distance2 = distance / 2
     position.b -= distance2
     position.d += distance2
-    return [position.a, position.b, position.c,position.d]
+    return [position.a +1, position.b, position.c,position.d]
   }
 
   var f = this.addAnnot({
@@ -114,19 +112,19 @@ function addTextLine(stringText, stringFont, integerSize, position, page) {
   });
 }
 
-function checkboxesLine(page){
+function checkboxesLine(page,position){
 
   this.addAnnot({
     type: "FreeText",
     page: page,
-    rect: [220, 422, 233, 409],
+    rect: [position.a,position.b,position.c,position.d],
     fillColor: color.transparent,
     width: 0.1,
   });
   this.addAnnot({
     type: "FreeText",
     page: page,
-    rect: [235, 420, 265, 411],
+    rect: [position.a+15,position.b-2,position.c+32,position.d+2],
     fillColor: color.transparent,
     width: 0,
     richContents: [spanBlack("YES", "Gotham", 9)]
@@ -135,18 +133,92 @@ function checkboxesLine(page){
   this.addAnnot({
     type: "FreeText",
     page: page,
-    rect: [280, 422, 293, 409],
+    rect: [position.a+60,position.b,position.c+60,position.d],
     fillColor: color.transparent,
     width: 0.1,
   });
   this.addAnnot({
     type: "FreeText",
     page: page,
-    rect: [295, 420, 335, 411],
+    rect: [position.a+75,position.b-2,position.c+102,position.d+2],
     fillColor: color.transparent,
     width: 0,
     richContents: [spanBlack("NO", "Gotham", 9)]
   })
+}
+
+function doubleTextSingleField(stringText, stringText2, stringFont, integerSize, position, page){
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b, position.a + 150, position.d + 10],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b - 10, position.a + 150, position.d],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText2, stringFont, integerSize)]
+  });
+
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a + 170, position.b-5, position.c, position.d+5],
+    fillColor: color.transparent,
+    width: 1
+  });
+}
+
+function addTripleTextLine(stringText,stringText2,stringText3, stringFont, integerSize, position, page) {
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b, position.c, position.d+20],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b-10, position.c, position.d+10],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText2, stringFont, integerSize)]
+  });
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b-20, position.c, position.d],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText3, stringFont, integerSize)]
+  });
+}
+
+function addDoubleTextLine(stringText,stringText2, stringFont, integerSize, position, page) {
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b, position.c, position.d+10],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText, stringFont, integerSize)]
+  });
+  this.addAnnot({
+    type: "FreeText",
+    page: page,
+    rect: [position.a, position.b-10, position.c, position.d],
+    fillColor: color.transparent,
+    width: 0,
+    richContents: [spanBlack(stringText2, stringFont, integerSize)]
+  });
 }
 
 function addMyTexts(){
@@ -208,13 +280,34 @@ addTextLine(
   0
 );
 
-checkboxesLine(0);
+checkboxesLine(0,{a:220,b:422,c:233,d:409});
+
+doubleTextSingleField(
+  "Actual address of domicile/",
+  "registered office (incl. Country)*",
+  "Gotham",
+  9,
+  {a: 50, b: 404, c: 562, d: 384},
+  0
+);
+
+addTripleTextLine(
+  "Pursuant to Article 41 of the Agreement on the Swiss banks’ code of conduct with regard to the exercise of due",
+  "diligence (CDB 20), the undersigned hereby declare(s) that he/she/they is a/are trustee(s) or member(s) of the",
+  "highest supervisory body of an underlying company of a trust known as:",
+  "Gotham",
+  9,
+  {a: 50, b: 379, c: 562, d: 349},
+  0
+);
+
 }
 
 addMyTexts()
 
 
 
+// function singlefield
+// function textcheckboxes
 
-// check + text + check + text
-// Adjust CheckBox Creation
+
