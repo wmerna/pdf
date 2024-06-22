@@ -1,4 +1,7 @@
 function test2() {
+
+    // Set global variables to be accessed from anywhere in the doc
+
     global.counter = [1,1];
     global.doc = this;
     global.spacing = 40;
@@ -6,25 +9,26 @@ function test2() {
     global.secondSection = { a: 100, b: 600, c: 200, d: 620 };
     global.currentPage = [0,0]
 
+    // Initialize all the fields
+
     var titleField = global.doc.addField("SectionTitle", "text", 0, [global.firstSection.a, global.firstSection.b, global.firstSection.c, global.firstSection.d]);
     titleField.value = "Head Title";
-
     var entryField = global.doc.addField("EntryField", "text", 0, [global.firstSection.a, global.firstSection.b - 20, global.firstSection.c, global.firstSection.d - 20]);
     entryField.value = "";
-
     var secondTitleField = global.doc.addField("SecondSectionTitle" + global.currentPage[1], "text", 0, [global.secondSection.a, global.secondSection.b, global.secondSection.c, global.secondSection.d]);
     secondTitleField.value = "Adjusted Section";
-
     var secondEntryField = global.doc.addField("SecondEntryField" + global.currentPage[1], "text", 0, [global.secondSection.a, global.secondSection.b - 20, global.secondSection.c, global.secondSection.d - 20]);
     secondEntryField.value = "";
-
     var duplicateButton = global.doc.addField("DuplicateButton", "button", 0, [100, 100, 200, 150]);
     duplicateButton.buttonSetCaption("Duplicate Section");
     duplicateButton.setAction("MouseUp", "duplicateSection();");
-
     var deleteButton = global.doc.addField("DeleteButton", "button", 0, [220, 100, 320, 150]);
     deleteButton.buttonSetCaption("Delete Last Section");
     deleteButton.setAction("MouseUp", "deleteLastSection();");
+
+
+    // Set the duplicate function 
+    // CurrentY is t
 
     global.doc.addScript("duplicateSection", function duplicateSection() {
         var currentY = global.firstSection.b - (global.counter[0] * global.spacing);
@@ -34,6 +38,7 @@ function test2() {
             global.counter[0] = 1;
             currentY = global.firstSection.b - global.spacing;
         }
+        // var newsecondTitlePos = [global.firstSection.a, global.firstSection.b - global.spacing, global.firstSection.c, global.firstSection.b + 20]
         var newTitlePos = [global.firstSection.a, currentY, global.firstSection.c, currentY + 20];
         var newEntryPos = [global.firstSection.a, currentY - 20, global.firstSection.c, currentY];
         var newTitleField = global.doc.addField("SectionTitle" + global.counter[0] + "" + global.currentPage[0], "text", global.currentPage[0], newTitlePos);
@@ -42,16 +47,16 @@ function test2() {
         newEntryField.value = "";
         global.counter[0] += 1;
         global.counter[1] += 1;
+        console.println("global coutner after duplicating  " + global.counter)
+        console.println("this is the position of the entry after duplicating " + newEntryPos);
         adjustSecondSection();
     });
 
     global.doc.addScript("deleteLastSection", function deleteLastSection() {
-        console.println(global.counter);
         if (global.counter[0] >= 1) {
             global.counter[0] -= 1;
             global.counter[1] -= 1;
                 if(global.counter[0] === 0 && global.currentPage[0] !== 0){
-                    console.println("the global counter is set at 0");
                     global.counter[0] = 17;
                     global.currentPage[0] -= 1; 
                 }
@@ -63,6 +68,7 @@ function test2() {
             if (entryField != null) {
                 global.doc.removeField(entryField.name);
             }
+            console.println("global counter after deleting the duplicated section  " + global.counter);
             adjustSecondSection();
         }
     });
@@ -91,6 +97,7 @@ function test2() {
             var newSecondEntryField = global.doc.addField("SecondEntryField" + global.currentPage[1],"text",global.currentPage[1],newSecondEntryPos);
             newSecondEntryField.value = secondEntryField.value;
             global.doc.removeField(secondEntryField.name);
+            console.println("global counter when duplicated above zero " + global.counter[1]);
     }
     return;
 
@@ -99,8 +106,8 @@ function test2() {
 
             global.currentPage[1] += 1;
             global.counter[1] = 1;
-            newSecondTitlePos = [global.secondSection.a, global.secondSection.b - 40 - (global.counter[1] * global.spacing), global.secondSection.c, global.secondSection.d - 40 - (global.counter[1] * global.spacing)];
-            newSecondEntryPos = [global.secondSection.a, global.secondSection.b - 20 - (global.counter[1] * global.spacing), global.secondSection.c, global.secondSection.d - 20- (global.counter[1] * global.spacing)];
+            newSecondTitlePos = [global.secondSection.a, global.secondSection.b, global.secondSection.c, global.secondSection.d];
+            newSecondEntryPos = [global.secondSection.a, global.secondSection.b, global.secondSection.c, global.secondSection.d - 20];
 
             var index = global.currentPage[1] - 1
             var secondTitleField = global.doc.getField("SecondSectionTitle" + index);
@@ -115,6 +122,7 @@ function test2() {
                 var newSecondEntryField = global.doc.addField("SecondEntryField" + global.currentPage[1],"text",global.currentPage[1],newSecondEntryPos);
                 newSecondEntryField.value = secondEntryField.value;
                 global.doc.removeField(secondEntryField.name);
+                console.println("global counter when adjusted section below zero  "+ global.counter[1]);
             }
 
             return;
@@ -129,6 +137,7 @@ function test2() {
             if (secondEntryField != null) {
                 secondEntryField.rect = newSecondEntryPos;
                 secondEntryField.page = global.currentPage[1];
+                console.println("global counter when adjusting  " + global.counter[1]);
             }
         }
     });
@@ -137,3 +146,4 @@ function test2() {
 }
 
 test2();
+
