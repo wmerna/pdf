@@ -1,4 +1,7 @@
 // 3006 Add variable field name depending on the index of the function called.
+// 0107 add rm function, delete button function, adjust below function, name in pd
+// 0107 added button Dictionnary
+// 0207 To create the button adjust functions, add the buttons and test
 
 var bordersLeft = 50;
 var bordersRight = 562;
@@ -9,26 +12,24 @@ var textColor = ["RGB", 0.098, 0.161, 0.318]; // Dark Blue
 var positionDictionnary = [
     [
       {
-        title:{ a: bordersLeft, b: 602, c: bordersRight, d: 0 },
-        name:{a: bordersLeft, b: 562, c: bordersRight, d: 0},
-        domicile:{a: bordersLeft, b: 547, c: bordersRight, d: 0},
-        dob:{a: bordersLeft, b: 522, c: bordersRight, d: 0},
-        nationality:{a: bordersLeft, b: 507, c: bordersRight, d: 0},
-        dod: {a: bordersLeft, b: 492, c: bordersRight, d: 0},
-        revoc:{a: bordersLeft, b: 467, c: bordersRight, d: 0},
-        checkboxes:{a:bordersLeft,b:452,c:bordersRight,d:0},
-        button:{a:bordersLeft,b:434,c:bordersRight,d:0}
+        title:{ a: bordersLeft, b: 602, c: bordersRight, d: 0, f:"title"},
+        name:{a: bordersLeft, b: 562, c: bordersRight, d: 0,f:"name"},
+        domicile:{a: bordersLeft, b: 547, c: bordersRight, d: 0,f:"domicile"},
+        dob:{a: bordersLeft, b: 522, c: bordersRight, d: 0,f:"dob"},
+        nationality:{a: bordersLeft, b: 507, c: bordersRight, d: 0,f:"nationality"},
+        dod: {a: bordersLeft, b: 492, c: bordersRight, d: 0,f:"dod"},
+        revoc:{a: bordersLeft, b: 467, c: bordersRight, d: 0,f:"revoc"},
+        checkboxes:{a:bordersLeft,b:452,c:bordersRight,d:0,f:"checkboxes"}
       }
   ],
   [
     {
-      title:{ a: bordersLeft, b: 409, c: bordersRight, d: 0 }, // 30
-      name:{a: bordersLeft, b: 369, c: bordersRight, d: 0}, // 10 // 10
-      domicile:{a: bordersLeft, b: 354, c: bordersRight, d: 0},// 20 // 5
-      dob:{a: bordersLeft, b: 329, c: bordersRight, d: 0}, // 10 // 5
-      nationality:{a: bordersLeft, b: 314, c: bordersRight, d: 0}, // 10 // 5
-      dod: {a: bordersLeft, b: 299, c: bordersRight, d: 0}, // 20 // 5
-      button:{a:bordersLeft,b:274,c:bordersRight,d:0} // 20 // 5
+      title:{ a: bordersLeft, b: 409, c: bordersRight, d: 0,f:"title2"}, // 30
+      name:{a: bordersLeft, b: 369, c: bordersRight, d: 0,f:"name2"}, // 10 // 10
+      domicile:{a: bordersLeft, b: 354, c: bordersRight, d: 0,f:"domicile2"},// 20 // 5
+      dob:{a: bordersLeft, b: 329, c: bordersRight, d: 0,f:"dob2"}, // 10 // 5
+      nationality:{a: bordersLeft, b: 314, c: bordersRight, d: 0,f:"nationality2"}, // 10 // 5
+      dod: {a: bordersLeft, b: 299, c: bordersRight, d: 0,f:"dod2"} // 20 // 5
     }
   ]
 ]
@@ -42,6 +43,10 @@ var sd = {
     smallsep:2,
     checkboxTextLenght:40
 }
+var buttonDictionary = [
+  {button:{a:bordersLeft,b:434,c:bordersRight,d:0,f:"button"}},
+  {button:{a:bordersLeft,b:274,c:bordersRight,d:0,f:"button2"}}
+]
 
 /*
 names: 
@@ -53,12 +58,24 @@ AddSingleTextLine = title
 doubleTextSingleField = title & title-2 & title-field
 addTripleTextLine = title & title-2 & title-3
 addDoubleTextLine = title & title-2
-addMyButtons = title & title2
-addcheckboxesLine = title & title-field & title2 & title2-field
-addTextAndDoubleCheckbox = title-main & title & title-field & title2 & title2-field 
+addMyButtons = title & title-2
+addcheckboxesLine = title & title-field & title-2 & title2-field
+addTextAndDoubleCheckbox = title-main & title & title-field & title-2 & title2-field 
 addCheckboxAndText = title & title-field
-*/
 
+
+*/
+/*
+  "section1Title"+"-"+index
+  "names"+"-"+index
+  "domicile"+"-"+index
+  "DOB"+"-"+index
+  "nationality"+"-"+index
+  "DOD"+"-"+index
+  "revoke"+"-"+index
+  "checkboxes"+"-"+index
+  "button"+"-"+index
+  */
 
 function addField2(title,page,position){
         var field = this.addField(
@@ -83,7 +100,6 @@ function addField1(title,page,position,text){
     return field;
 
 }
-
   // SaD 
   function addTitles(stringText, position,title) {
 
@@ -343,61 +359,54 @@ function addField1(title,page,position,text){
     )
   }
 
-
-  /*
-  "section1Title"+"-"+index
-  "names"+"-"+index
-  "domicile"+"-"+index
-  "DOB"+"-"+index
-  "nationality"+"-"+index
-  "DOD"+"-"+index
-  "revoke"+"-"+index
-  "checkboxes"+"-"+index
-  "button"+"-"+index
-  */
-
+  
+  function createSections(section,index){
+    console.println("create new section No-" + section);
+    if(section = "0"){createFirstSection(index)}
+    else if(section = "1"){createSecondSection(index)}
+    else{console.println("luckyme")}
+  }
   function createFirstSection(index){
 // section1Title, names, domicile, DOB, 
   addTitles(
     "1. Information pertaining to the trust (for a) and b) please tick the applicable boxes):",
     positionDictionnary[0][index].title,
-    "section1Title"+"-"+index
+    positionDictionnary[0][index].title.f + "-"+index
   );
   addLineAndField(
     "First name(s), last name(s)/entity",
     positionDictionnary[0][index].name,
-    "names"+"-"+index
+    positionDictionnary[0][index].name.f+"-"+index
   );
   AddDoubleLineAndField(
     "Actual address of domicile/",
     "registered office (incl. Country)*",
     positionDictionnary[0][index].domicile,
-    "domicile"+"-"+index
+    positionDictionnary[0][index].domicile.f+"-"+index
   ); 
   addLineAndField(
     "Date of birth (DD/MM/YYYY)",
     positionDictionnary[0][index].dob,
-    "DOB"+"-"+index
+    positionDictionnary[0][index].dob.f+"-"+index
   );
   addLineAndField(
     "Nationality",
     positionDictionnary[0][index].nationality,
-    "nationality"+"-"+index
+    positionDictionnary[0][index].nationality.f+"-"+index
   );
   doubleTextSingleField(
     "Date of death (if deceased)",
     "(DD/MM/YYYY)",
     positionDictionnary[0][index].dod,
-    "DOD"+"-"+index
+    positionDictionnary[0][index].dod.f+"-"+index
   );
   addSingleTextLine(
     "In case of a revocable trust: does the settlor have the right to revoke the trust?",
     positionDictionnary[0][index].revoc,
-    "revoke"+"-"+index
+    positionDictionnary[0][index].revoc.f+"-"+index
   );
 
-  checkboxesLine(positionDictionnary[0][index].checkboxes,"checkboxes"+"-"+index);
-  addMyButtons("button"+"-"+index,positionDictionnary[0][index].button);
+  checkboxesLine(positionDictionnary[0][index].checkboxes,positionDictionnary[0][index].checkboxes.f+"-"+index);
 
   }
   function createSecondSection(index){
@@ -405,100 +414,118 @@ function addField1(title,page,position,text){
       addTitles(
         "2. Information pertaining to the (ultimate economic, not fiduciary) settlor of the trust (individual(s) or entity/-ies):",
         positionDictionnary[1][index].title,
-        "section2Title"+"-"+index
+        positionDictionnary[1][index].title.f+"-"+index
         )
       
       addLineAndField(
         "First name(s), last name(s)/entity"+"-"+index,
         positionDictionnary[1][index].name,
-        "namesS2"+"-"+index
+        positionDictionnary[1][index].name.f+"-"+index
       );
       
       AddDoubleLineAndField(
         "Actual address of domicile/",
         "registered office (incl. Country)*",
         positionDictionnary[1][index].domicile,
-        "domicileS2"+"-"+index
+        positionDictionnary[1][index].domicile.f+"-"+index
       );
       
       addLineAndField(
         "Date of birth (DD/MM/YYYY)",
         positionDictionnary[1][index].dob,
-        "DOBS2"+"-"+index
+        positionDictionnary[1][index].dob.f+"-"+index
       );
       
       addLineAndField(
         "Nationality",
         positionDictionnary[1][index].nationality,
-        "nationalityS2"+"-"+index
+        positionDictionnary[1][index].nationality.f+"-"+index
       );
       
       doubleTextSingleField(
         "Date of death (if deceased)",
         "(DD/MM/YYYY)",
         positionDictionnary[1][index].dod,
-        "DODS2"+"-"+index
+        positionDictionnary[1][index].dod.f+"-"+index
       );
-      addMyButtons("buttonS2"+"-"+index,positionDictionnary[1][index].button);
+  }
+  function createMybuttons(){
+    addMyButtons(positionDictionnary[0][index].button.f+"-"+index,positionDictionnary[0][index].button); // first section
+    addMyButtons(positionDictionnary[1][index].button.f+"-"+index,positionDictionnary[1][index].button); //second section
   }
 
-  function updatePositionDict(stringIndexSection,stringIndexField,sectionSize){
+
+  function duplicateSectionButton(stringIndexSection,sectionSize){
+    stringIndexField = positionDictionnary[stringIndexSection].length-1;
     newDict = {};
             for(g in positionDictionnary[stringIndexSection][stringIndexField]){
               newDict[g] = {
               a: positionDictionnary[stringIndexSection][stringIndexField][g].a,
               b: positionDictionnary[stringIndexSection][stringIndexField][g].b - sectionSize,
               c: positionDictionnary[stringIndexSection][stringIndexField][g].c,
-              d: positionDictionnary[stringIndexSection][stringIndexField][g].d
+              d: positionDictionnary[stringIndexSection][stringIndexField][g].d,
+              f: positionDictionnary[stringIndexSection][stringIndexField][g].f
             };
+            console.println("this is my D-"+newDict[g].d)
             checkPage(newDict[g])
-            console.println(positionDictionnary[stringIndexSection][stringIndexField][g].b)
             }
       positionDictionnary[0].push(newDict)
+
+      createSections(stringIndexSection,stringIndexField+1)
   }
   function checkPage(position){
-    if(position.b < bottom){console.println("this runs");position.d =+ 1; var dist = bottom - position.b; position.b = top - dist;console.println(bottom + "new "+position.b)}; // depending on single, double or triple size, problem 
-    if(position.b > top){console("this runs top");position.d =- 1; var dist = top - position.b; position.b = bottom + dist;console.println("new "+position.b)}; 
+    if(position.b < bottom){console.println("this runs");position.d += 1; var dist = bottom - position.b; position.b = top - dist;console.println(bottom + "new "+position.b + "the D position is -"+ position.d)}; // depending on single, double or triple size, problem 
+    if(position.b > top){console("this runs top");position.d -= 1; var dist = top - position.b; position.b = bottom + dist;console.println("new "+position.b)}; 
   }
-  
-
-  function deleteSingleSection(annotToDelete,page){ // Only single page check
-    var annotations = this.getAnnots({ nPage: page });
-        for (var i = 0; i < annotations.length; i++) {
-          var annot = annotations[i].name;
-          if (annot != undefined){
-            if (annotToDelete ===  annot) {
-                annotations[i].destroy();
-                console.println("Annotation deleted.");
-            }}
+function rmfield(position,index){
+  console. println("the remove field function runs");
+  this.removeField(position+"-"+index+"-3");
+  this.removeField(position+"-"+index+"-field");
+  this.removeField(position+"-"+index+"-main");
+  this.removeField(position+"-"+index+"-2-field");
+  this.removeField(position+"-"+index+"-2");
+  this.removeField(position+"-"+index);
+  }
+function adjustBelowSections(stringIndexSection, sectionSize) {
+      for ( i = stringIndexSection + 1; i < positionDictionnary.length; i++) {
+          for ( f in positionDictionnary[i]) {
+              for ( g in positionDictionnary[i][f]) {
+                rmfield(positionDictionnary[i][f][g].f,f);
+                  positionDictionnary[i][f][g] = {
+                      a: positionDictionnary[i][f][g].a,
+                      b: positionDictionnary[i][f][g].b - sectionSize,
+                      c: positionDictionnary[i][f][g].c,
+                      d: positionDictionnary[i][f][g].d,
+                      f: positionDictionnary[i][f][g].f
+                  };  
+                  checkPage(positionDictionnary[i][f][g]);
+              }
+          createSections(i,f);
+          }
+          
       }
   }
-  function deleteLastSection(sectionNo,page){ // page issue // other issues 
-    if(positionDictionnary[sectionNo].length !=1){
-      for (key in positionDictionnary[sectionNo][lastSectionNo]){
-        no = lastSectionNo + 1;
-        deleteSingleSection(key + "-" + no,page)
-      }
+function deleteButtonfunction(section){
+    var lastSection = positionDictionnary[section].length-1;
+    if (lastSection != 0){
+    for (i in positionDictionnary[section][lastSection]){
+      rmfield(positionDictionnary[section][lastSection][i].f,lastSection);
     }
   }
-  function adjustBelowSections(sectionSize,sectionNumber){ // finish
-    for (i in i >= sectionNumber || i < numberOfSections){
-      for(f in positionDictionnary[i]){
-        for(g in positionDictionnary[i][f][g]){
-          copy 
-          paste 
-          delete
-        }
-      }
-    }
-  } 
-// What's with the button positions ? 
+  }
 
 
-createFirstSection(0)
-createSecondSection(0)
+
+// buttons : delete from main create functions, add separate crete function, move/copy/delete for each 
+// adjustbelow sections - descend d'un nombre fixe
+// deletebutton sections - décale d'un nombre fixe
+// duplicate section(boug) - descend d'un nombre fixe
+
+
+// enelever les boutons du dictionnaire et faire des fonctions propres aux boutons (adjust seulement)
+/*
 updatePositionDict("0","0",300);
 createFirstSection(1);
 updatePositionDict("0","1",600); 
-createFirstSection(2)
+createFirstSection(2) */
  
