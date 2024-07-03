@@ -1,9 +1,7 @@
 // 3006 Add variable field name depending on the index of the function called.
 // 0107 add rm function, delete button function, adjust below function, name in pd
 // 0107 added button Dictionnary
-
-
-// 0207 To create the button adjust functions, add the buttons and test
+// 0307 Created the button adjust functions, add the buttons and test
 
 var bordersLeft = 50;
 var bordersRight = 562;
@@ -46,7 +44,7 @@ var sd = {
     checkboxTextLenght:40
 }
 var buttonDictionary = [
-  {button:{a:bordersLeft,b:434,c:bordersRight,d:0,f:"button"}},
+  {button:{a:bordersLeft,b:434,c:bordersRight,d:0,f:"button1"}},
   {button:{a:bordersLeft,b:274,c:bordersRight,d:0,f:"button2"}}
 ]
 
@@ -452,11 +450,9 @@ function addField1(title,page,position,text){
       );
   }
   function createMybuttons(){
-    addMyButtons(positionDictionnary[0][index].button.f+"-"+index,positionDictionnary[0][index].button); // first section
-    addMyButtons(positionDictionnary[1][index].button.f+"-"+index,positionDictionnary[1][index].button); //second section
+    addMyButtons(buttonDictionary[0].button.f+"-"+index,buttonDictionary[0].button); // first section
+    addMyButtons(buttonDictionary[1].button.f+"-"+index,buttonDictionary[1].button); //second section
   }
-
-
   function duplicateSectionButton(stringIndexSection,sectionSize){
     stringIndexField = positionDictionnary[stringIndexSection].length-1;
     newDict = {};
@@ -515,16 +511,44 @@ function deleteButtonfunction(section){
     }
   }
   }
+function adjustMyButtons(move,sectionIndex){
+
+  buttonDictionary[sectionIndex].button.b += move
+
+  if(buttonDictionary[sectionIndex].button.b < bottom){
+    buttonDictionary[sectionIndex].button.d += 1; 
+    var dist = bottom - buttonDictionary[sectionIndex].button.b; 
+    buttonDictionary[sectionIndex].button.b = top - dist;
+  }
+  if(buttonDictionary[sectionIndex].button.b > top){
+    buttonDictionary[sectionIndex].button.d -= 1; 
+    var dist = top - buttonDictionary[sectionIndex].button.b; 
+    buttonDictionary[sectionIndex].button.b = bottom + dist;
+  }; 
+
+  this.removeField(buttonDictionary[sectionIndex].button.f+"-"+sectionIndex);
+  this.removeField(buttonDictionary[sectionIndex].button.f+"-"+sectionIndex+"-2");
+
+  addMyButtons(buttonDictionary[sectionIndex].button.f+"-"+index,buttonDictionary[sectionIndex].button);
+
+  // add script
+
+
+}
 
 
 
-// buttons : delete from main create functions, add separate crete function, move/copy/delete for each 
-// adjustbelow sections - descend d'un nombre fixe
-// deletebutton sections - décale d'un nombre fixe
-// duplicate section(boug) - descend d'un nombre fixe
+createFirstSection(0)
+createSecondSection(0)
+updatePositionDict("0","0",300)
+createFirstSection(1)
+adjustBelowSections(1,300)
+adjustMyButtons(300,0)
+adjustMyButtons(300,1)
 
 
-// enelever les boutons du dictionnaire et faire des fonctions propres aux boutons (adjust seulement)
+
+
 /*
 updatePositionDict("0","0",300);
 createFirstSection(1);
