@@ -2,6 +2,9 @@
 // 0107 add rm function, delete button function, adjust below function, name in pd
 // 0107 added button Dictionnary
 // 0307 Created the button adjust functions, add the buttons and test
+// 08/07 posiiton des boutons au déplacement, compilation des fonctions, ne pas modifier les titres quand les sections sont dupliquées
+// 15/07 adjusted duplication size selection
+// 15/07 all functions work
 
 var bordersLeft = 50;
 var bordersRight = 562;
@@ -9,27 +12,28 @@ var top = 780;
 var bottom = 100;
 var textColor = ["RGB", 0.098, 0.161, 0.318]; // Dark Blue
 
+
 var positionDictionnary = [
     [
       {
-        title:{ a: bordersLeft, b: 602, c: bordersRight, d: 0, f:"title"},
-        name:{a: bordersLeft, b: 562, c: bordersRight, d: 0,f:"name"},
-        domicile:{a: bordersLeft, b: 547, c: bordersRight, d: 0,f:"domicile"},
-        dob:{a: bordersLeft, b: 522, c: bordersRight, d: 0,f:"dob"},
-        nationality:{a: bordersLeft, b: 507, c: bordersRight, d: 0,f:"nationality"},
-        dod: {a: bordersLeft, b: 492, c: bordersRight, d: 0,f:"dod"},
-        revoc:{a: bordersLeft, b: 467, c: bordersRight, d: 0,f:"revoc"},
-        checkboxes:{a:bordersLeft,b:452,c:bordersRight,d:0,f:"checkboxes"}
+        title:{ a: bordersLeft, b: 602, c: bordersRight, d: 1, f:"title0"}, 
+        name:{a: bordersLeft, b: 562, c: bordersRight, d: 1,f:"name0"},
+        domicile:{a: bordersLeft, b: 547, c: bordersRight, d: 1,f:"domicile0"},
+        dob:{a: bordersLeft, b: 522, c: bordersRight, d: 1,f:"dob0"},
+        nationality:{a: bordersLeft, b: 507, c: bordersRight, d: 1,f:"nationality0"},
+        dod: {a: bordersLeft, b: 492, c: bordersRight, d: 1,f:"dod0"},
+        revoc:{a: bordersLeft, b: 467, c: bordersRight, d: 1,f:"revoc0"},
+        checkboxes:{a:bordersLeft,b:452,c:bordersRight,d:1,f:"checkboxes0"}
       }
   ],
   [
     {
-      title:{ a: bordersLeft, b: 409, c: bordersRight, d: 0,f:"title2"}, // 30
-      name:{a: bordersLeft, b: 369, c: bordersRight, d: 0,f:"name2"}, // 10 // 10
-      domicile:{a: bordersLeft, b: 354, c: bordersRight, d: 0,f:"domicile2"},// 20 // 5
-      dob:{a: bordersLeft, b: 329, c: bordersRight, d: 0,f:"dob2"}, // 10 // 5
-      nationality:{a: bordersLeft, b: 314, c: bordersRight, d: 0,f:"nationality2"}, // 10 // 5
-      dod: {a: bordersLeft, b: 299, c: bordersRight, d: 0,f:"dod2"} // 20 // 5
+      title:{ a: bordersLeft, b: 409, c: bordersRight, d: 1,f:"title1"}, // 30
+      name:{a: bordersLeft, b: 369, c: bordersRight, d: 1,f:"name1"}, // 10 // 10
+      domicile:{a: bordersLeft, b: 354, c: bordersRight, d: 1,f:"domicile1"},// 20 // 5
+      dob:{a: bordersLeft, b: 329, c: bordersRight, d: 1,f:"dob1"}, // 10 // 5
+      nationality:{a: bordersLeft, b: 314, c: bordersRight, d: 1,f:"nationality1"}, // 10 // 5
+      dod: {a: bordersLeft, b: 299, c: bordersRight, d: 1,f:"dod1"} // 20 // 5
     }
   ]
 ]
@@ -47,7 +51,10 @@ var buttonDictionary = [
   {button:{a:bordersLeft,b:434,c:bordersRight,d:0,f:"button1"}},
   {button:{a:bordersLeft,b:274,c:bordersRight,d:0,f:"button2"}}
 ]
-
+var distanceDictionary = {
+  0:153,
+  1:115
+}
 /*
 names: 
 addField2 & 1 = none
@@ -76,7 +83,7 @@ addCheckboxAndText = title & title-field
   "checkboxes"+"-"+index
   "button"+"-"+index
   */
-
+  this.addScript("addField2",
 function addField2(title,page,position){
         var field = this.addField(
           title, 
@@ -89,7 +96,8 @@ function addField2(title,page,position){
         field.textSize = sd.font;
         field.doNotScroll = true
         return field;
-}
+})
+this.addScript("addField1",
 function addField1(title,page,position,text){
     var field = this.addField(title,"text",page,position);
     field.value = text;
@@ -97,12 +105,13 @@ function addField1(title,page,position,text){
     field.textSize = sd.font;
     field.textColor = textColor;
     field.readonly = true;
+    field.author = "0";
     return field;
 
-}
-  // SaD 
+})
+  this.addScript("addTitles",
+    
   function addTitles(stringText, position,title) {
-
     var fieldRect = [position.a,position.b,position.c,position.b-sd.title];
     var textRect = [position.a,position.b-9.5,position.c,position.b-sd.title+11.5];
     
@@ -123,7 +132,8 @@ function addField1(title,page,position,text){
     tempField1.textColor = color.white
 
   
-  } 
+  } )
+  this.addScript("addLineAndField",
   function addLineAndField(stringText, position,title) {
     var textRect = [position.a, position.b, position.a + sd.maxText, position.b-sd.singleSize];
     var fieldRect = [position.a + sd.startSection, position.b, position.c, position.b-sd.singleSize];
@@ -138,7 +148,8 @@ function addField1(title,page,position,text){
         position.d,
         fieldRect
     )
-  }
+  })
+  this.addScript("AddDoubleLineAndField",
   function AddDoubleLineAndField(stringText, stringText2, position, title) {
 
     var textRect = [position.a, position.b, position.a + sd.maxText, position.b - sd.singleSize];
@@ -162,7 +173,8 @@ function addField1(title,page,position,text){
       position.d,
       pos
     )
-  } 
+  } )
+  this.addScript("addSingleTextLine",
   function addSingleTextLine(stringText, position,title) {
 
     var textRect = [position.a, position.b, position.c, position.b - sd.singleSize];
@@ -174,7 +186,8 @@ function addField1(title,page,position,text){
       stringText
     )
 
-  } 
+  } )
+  this.addScript("doubleTextSingleField",
   function doubleTextSingleField(stringText, stringText2, position, title){
    
     var textRect = [position.a, position.b, position.a + sd.maxText, position.b - sd.singleSize];
@@ -200,7 +213,8 @@ function addField1(title,page,position,text){
       position.d,
       pos
     );
-  }
+  })
+  this.addScript("addTripleTextLine",
   function addTripleTextLine(stringText,stringText2,stringText3, position, title) {
 
     var textRect = [position.a, position.b, position.c, position.b-sd.singleSize]
@@ -227,7 +241,8 @@ function addField1(title,page,position,text){
       textRect3,
       stringText3
     )
-  }
+  })
+  this.addScript("addDoubleTextLine",
   function addDoubleTextLine(stringText,stringText2, position,title) {
 
     var textRect = [position.a, position.b, position.c, position.b-sd.singleSize]
@@ -246,7 +261,8 @@ function addField1(title,page,position,text){
       textRect2,
       stringText2
     )
-  }
+  })
+  this.addScript("addMyButtons",
   function addMyButtons(title,position){
   
         var buttonA = this.addField(
@@ -268,7 +284,8 @@ function addField1(title,page,position,text){
           buttonD.buttonSetCaption("Delete Section");
           buttonD.fillColor = [ "RGB", .282,.706,.706 ];
           buttonD.textColor = color.white;
-  }
+  })
+  this.addScript("checkboxesLine",
   function checkboxesLine(position,title){
     
     var checkbox = [position.a+sd.startSection,position.b,position.a+sd.startSection+sd.checkboxes,position.b - sd.checkboxes];
@@ -302,7 +319,8 @@ function addField1(title,page,position,text){
       textRect2,
       "NO"
     )
-  }
+  })
+  this.addScript("addTextAndDoubleCheckbox",
   function addTextAndDoubleCheckbox(stringText,title,stringText2,stringText3, position){
 
     var textRect  = [position.a, position.b-5, position.c, position.b-14]
@@ -340,7 +358,8 @@ function addField1(title,page,position,text){
     field2.borderStyle = border.s;
     field2.borderColor = color.black;
 
-  }
+  })
+  this.addScript("addCheckBoxAndText",
   function addCheckBoxAndText(stringText,title,position){
 
     var textRect = [position.a+21, position.b-5, position.c, position.b-14];
@@ -357,15 +376,15 @@ function addField1(title,page,position,text){
       textRect,
       stringText
     )
-  }
+  }) 
 
-
-  function createSections(section,index){
-    console.println("create new section No-" + section);
-    if(section = "0"){createFirstSection(index)}
-    else if(section = "1"){createSecondSection(index)}
+  this.addScript("createSections",
+  function createSections(section, index){
+    if(section === 0){createFirstSection(index)}
+    else if(section === 1){console.println(index);createSecondSection(index)}
     else{console.println("luckyme")}
-  }
+  })
+  this.addScript("createFirstSection",
   function createFirstSection(index){
 // section1Title, names, domicile, DOB, 
   addTitles(
@@ -408,7 +427,8 @@ function addField1(title,page,position,text){
 
   checkboxesLine(positionDictionnary[0][index].checkboxes,positionDictionnary[0][index].checkboxes.f+"-"+index);
 
-  }
+  })
+  this.addScript("createSecondSection",
   function createSecondSection(index){
 
       addTitles(
@@ -448,110 +468,126 @@ function addField1(title,page,position,text){
         positionDictionnary[1][index].dod,
         positionDictionnary[1][index].dod.f+"-"+index
       );
-  }
+  })
+
+  this.addScript("createMybuttons", 
   function createMybuttons(){
-    addMyButtons(buttonDictionary[0].button.f+"-"+index,buttonDictionary[0].button); // first section
-    addMyButtons(buttonDictionary[1].button.f+"-"+index,buttonDictionary[1].button); //second section
-  }
-  function duplicateSectionButton(stringIndexSection,sectionSize){
+    addMyButtons(buttonDictionary[0].button.f,buttonDictionary[0].button); // first section
+    this.getField(buttonDictionary[0].button.f).setAction("MouseUp", "duplicateSectionButton(0);");
+    this.getField(buttonDictionary[0].button.f+"-2").setAction("MouseUp", "deleteButtonfunction(0);");
+
+    addMyButtons(buttonDictionary[1].button.f,buttonDictionary[1].button); 
+    this.getField(buttonDictionary[1].button.f).setAction("MouseUp", "duplicateSectionButton(1);");
+    this.getField(buttonDictionary[1].button.f+"-2").setAction("MouseUp", "deleteButtonfunction(1);");
+  })
+  this.addScript("duplicateSectionButton",
+  function duplicateSectionButton(stringIndexSection){
     stringIndexField = positionDictionnary[stringIndexSection].length-1;
     newDict = {};
             for(g in positionDictionnary[stringIndexSection][stringIndexField]){
-              newDict[g] = {
+              if (g != "title"){ 
+                newDict[g] = {
               a: positionDictionnary[stringIndexSection][stringIndexField][g].a,
-              b: positionDictionnary[stringIndexSection][stringIndexField][g].b - sectionSize,
+              b: positionDictionnary[stringIndexSection][stringIndexField][g].b - distanceDictionary[stringIndexSection],
               c: positionDictionnary[stringIndexSection][stringIndexField][g].c,
               d: positionDictionnary[stringIndexSection][stringIndexField][g].d,
               f: positionDictionnary[stringIndexSection][stringIndexField][g].f
             };
-            console.println("this is my D-"+newDict[g].d)
+          }else{
+            newDict[g] = {
+              a: positionDictionnary[stringIndexSection][stringIndexField][g].a,
+              b: positionDictionnary[stringIndexSection][stringIndexField][g].b,
+              c: positionDictionnary[stringIndexSection][stringIndexField][g].c,
+              d: positionDictionnary[stringIndexSection][stringIndexField][g].d,
+              f: positionDictionnary[stringIndexSection][stringIndexField][g].f
+          }
+        }
             checkPage(newDict[g])
-            }
-      positionDictionnary[0].push(newDict)
+            };      
+            
+            positionDictionnary[stringIndexSection].push(newDict)
 
       createSections(stringIndexSection,stringIndexField+1)
-  }
+
+      adjustBelowSections( stringIndexSection,true)  
+  })
+
+  this.addScript("checkPage",
   function checkPage(position){
-    if(position.b < bottom){console.println("this runs");position.d += 1; var dist = bottom - position.b; position.b = top - dist;console.println(bottom + "new "+position.b + "the D position is -"+ position.d)}; // depending on single, double or triple size, problem 
-    if(position.b > top){console("this runs top");position.d -= 1; var dist = top - position.b; position.b = bottom + dist;console.println("new "+position.b)}; 
-  }
+    if(position.b < bottom){position.d += 1; var dist = bottom - position.b; position.b = top - dist}; // depending on single, double or triple size, problem 
+    if(position.b > top){position.d -= 1; var dist = top - position.b; position.b = bottom - dist}; 
+  })
+
+  this.addScript("rmfield",
 function rmfield(position,index){
-  console. println("the remove field function runs");
   this.removeField(position+"-"+index+"-3");
   this.removeField(position+"-"+index+"-field");
   this.removeField(position+"-"+index+"-main");
   this.removeField(position+"-"+index+"-2-field");
   this.removeField(position+"-"+index+"-2");
   this.removeField(position+"-"+index);
-  }
-function adjustBelowSections(stringIndexSection, sectionSize) {
+  })
+
+  this.addScript("adjustBelowSections",
+function adjustBelowSections(stringIndexSection,call) {
       for ( i = stringIndexSection + 1; i < positionDictionnary.length; i++) {
-          for ( f in positionDictionnary[i]) {
-              for ( g in positionDictionnary[i][f]) {
-                rmfield(positionDictionnary[i][f][g].f,f);
-                  positionDictionnary[i][f][g] = {
-                      a: positionDictionnary[i][f][g].a,
-                      b: positionDictionnary[i][f][g].b - sectionSize,
-                      c: positionDictionnary[i][f][g].c,
-                      d: positionDictionnary[i][f][g].d,
-                      f: positionDictionnary[i][f][g].f
+        size = stringIndexSection;
+        if (call === true){var adjustment = distanceDictionary[size]}else{var adjustment = -1*distanceDictionary[size]};
+          for ( h in positionDictionnary[i]) {
+              for ( g in positionDictionnary[i][h]) {
+                rmfield(positionDictionnary[i][h][g].f,h);
+                  positionDictionnary[i][h][g] = {
+                      a: positionDictionnary[i][h][g].a,
+                      b: positionDictionnary[i][h][g].b - adjustment,
+                      c: positionDictionnary[i][h][g].c,
+                      d: positionDictionnary[i][h][g].d,
+                      f: positionDictionnary[i][h][g].f
                   };  
-                  checkPage(positionDictionnary[i][f][g]);
+                  
+                  checkPage(positionDictionnary[i][h][g]);
               }
-          createSections(i,f);
+           
+          if(i===1){createSecondSection(h)};
+          if(i===0){createFirstSection(h)};
+          // adjustMyButtons(adjustment,i)
           }
           
       }
-  }
+  })
+
+  this.addScript("deleteButtonfunction",
 function deleteButtonfunction(section){
     var lastSection = positionDictionnary[section].length-1;
+    console.println("this is the value of my lastSection  :"+lastSection)
     if (lastSection != 0){
     for (i in positionDictionnary[section][lastSection]){
-      rmfield(positionDictionnary[section][lastSection][i].f,lastSection);
+      console.println("this runs : "+ positionDictionnary[section][lastSection][i].f+"  "+lastSection)
+      rmfield(positionDictionnary[section][lastSection][i].f,lastSection); 
     }
+    console.println("here the adjust below function runs")
+    adjustBelowSections(section,false) 
+    positionDictionnary[section].splice(lastSection, 1);
+
   }
-  }
-function adjustMyButtons(move,sectionIndex){
-
-  buttonDictionary[sectionIndex].button.b += move
-
-  if(buttonDictionary[sectionIndex].button.b < bottom){
-    buttonDictionary[sectionIndex].button.d += 1; 
-    var dist = bottom - buttonDictionary[sectionIndex].button.b; 
-    buttonDictionary[sectionIndex].button.b = top - dist;
-  }
-  if(buttonDictionary[sectionIndex].button.b > top){
-    buttonDictionary[sectionIndex].button.d -= 1; 
-    var dist = top - buttonDictionary[sectionIndex].button.b; 
-    buttonDictionary[sectionIndex].button.b = bottom + dist;
-  }; 
-
-  this.removeField(buttonDictionary[sectionIndex].button.f+"-"+sectionIndex);
-  this.removeField(buttonDictionary[sectionIndex].button.f+"-"+sectionIndex+"-2");
-
-  addMyButtons(buttonDictionary[sectionIndex].button.f+"-"+index,buttonDictionary[sectionIndex].button);
-
-  // add script
-
-
-}
-
+  })
 
 
 createFirstSection(0)
 createSecondSection(0)
-updatePositionDict("0","0",300)
-createFirstSection(1)
-adjustBelowSections(1,300)
-adjustMyButtons(300,0)
-adjustMyButtons(300,1)
+createMybuttons()
 
 
 
+// Quand ré-ouverture - positionDictionnary is not defined
 
-/*
-updatePositionDict("0","0",300);
-createFirstSection(1);
-updatePositionDict("0","1",600); 
-createFirstSection(2) */
- 
+// Créer une page de garde pour 1. stocker les variables, 2. ajuster le nombre de section 
+// mettre un pop-up qui demande si le document est fini (enregister et supprimer les pages) ou si le document n'est pas fini ( garder les pages et les variables )
+
+// Page de garde = présentation du document & du créateur avec +/- pour ajuster chacune des sections 
+// Pop-up pour demander si le document est terminé ou si le document n'est pas terminé
+// Design des pages templates
+
+
+// test persistant dictionnary
+
+
